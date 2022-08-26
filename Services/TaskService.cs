@@ -7,9 +7,10 @@ namespace RestApiMyTasks.Services
 {
     public class TaskService
     {
-        public string getTasksById(int id)
+        private PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
+
+        public GetTasksResponseModel getTasksById(int id)
         {
-            PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
 
             List<TaskModel> tasksList = new List<TaskModel>();
 
@@ -32,19 +33,18 @@ namespace RestApiMyTasks.Services
 
                 GetTasksResponseModel getResponse = new GetTasksResponseModel(200, tasksList, "Success");
 
-                return JsonSerializer.Serialize(getResponse);
+                return getResponse;
             }
             catch (Exception exp)
             {
                 GetTasksResponseModel getResponse = new GetTasksResponseModel(400, tasksList, exp.Message);
 
-                return JsonSerializer.Serialize(getResponse);
+                return getResponse;
             }
         }
 
-        public string createTask(CreateTaskRequestModel createRequest)
+        public CreateTaskResponseModel createTask(CreateTaskRequestModel createRequest)
         {
-            PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
 
             try
             {
@@ -59,13 +59,38 @@ namespace RestApiMyTasks.Services
 
                 CreateTaskResponseModel createResponse = new CreateTaskResponseModel(200, 1, "Success");
 
-                return JsonSerializer.Serialize(createResponse);
+                return createResponse;
             }
             catch (Exception exp)
             {
                 CreateTaskResponseModel createResponse = new CreateTaskResponseModel(400, 0, exp.Message);
 
-                return JsonSerializer.Serialize(createResponse);
+                return createResponse;
+            }
+        }
+
+        internal UpdateTaksResponseModel updateTask(UpdateTaskRequestModel updateRequest)
+        {
+            try
+            {
+                using var conection = new NpgsqlConnection(pgConect.getConectionString());
+                conection.Open();
+
+                var sql = $"UPDATE tb_tasks SET description_str = '{updateRequest.descreption}', done_bool = {updateRequest.done} WHERE id_task_int = {updateRequest.task_id}";
+
+                using var cmd = new NpgsqlCommand(sql, conection);
+
+                cmd.ExecuteNonQuery();
+
+                UpdateTaksResponseModel createResponse = new UpdateTaksResponseModel(200, 1, "Success");
+
+                return createResponse;
+            }
+            catch (Exception exp)
+            {
+                UpdateTaksResponseModel createResponse = new UpdateTaksResponseModel(400, 0, exp.Message);
+
+                return createResponse;
             }
         }
     }

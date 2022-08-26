@@ -11,11 +11,11 @@ namespace RestApiMyTasks.Controllers
 
         // GET api/<TasksController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public GetTasksResponseModel Get(int id)
         {
             TaskService taskService = new TaskService();
 
-            string response = taskService.getTasksById(id);
+            GetTasksResponseModel response = taskService.getTasksById(id);
 
             return response;
         }
@@ -23,11 +23,22 @@ namespace RestApiMyTasks.Controllers
 
         // POST api/<TasksController>
         [HttpPost("createTask")]
-        public string Post([FromBody] CreateTaskRequestModel createRequest)
+        public CreateTaskResponseModel Post([FromBody] CreateTaskRequestModel createRequest)
         {
             TaskService taskService = new TaskService();
 
-            string response = taskService.createTask(createRequest);
+            CreateTaskResponseModel response = taskService.createTask(createRequest);
+
+            return response;
+        }
+
+        // PUT api/<TasksController>/5
+        [HttpPut("updateTaks")]
+        public UpdateTaksResponseModel Put([FromBody] UpdateTaskRequestModel updateRequest)
+        {
+            TaskService taskService = new TaskService();
+
+            UpdateTaksResponseModel response = taskService.updateTask(updateRequest);
 
             return response;
         }
@@ -38,14 +49,6 @@ namespace RestApiMyTasks.Controllers
         public IEnumerable<string> Get()
         {
             return new string[] { "value1", "value2" };
-        }
-
-        
-
-        // PUT api/<TasksController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
         }
 
         // DELETE api/<TasksController>/5
