@@ -10,36 +10,49 @@ namespace RestApiMyTasks.Controllers
     public class UsersController : ControllerBase
     {
         // GET api/<UsersController>/5
-        [HttpGet("{email}/{senha}")]
-        public bool Login(string email, string senha)
+        [HttpGet("login/{email}/{senha}")]
+        public string Login(string email, string senha)
         {
             PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
 
-            using var conection = new NpgsqlConnection(pgConect.getConectionString());
-            conection.Open();
-
-            var sql = $"SELECT * FROM tb_users WHERE email_str = '{email}'";
-
-            using var cmd = new NpgsqlCommand(sql, conection);
-
-            using NpgsqlDataReader readed = cmd.ExecuteReader();
-
-            UserModel user = new UserModel();
-
-            while (readed.Read())
+            try
             {
-                user = new UserModel(readed.GetInt32(0), readed.GetString(1), readed.GetString(2));
-            }
+                using var conection = new NpgsqlConnection(pgConect.getConectionString());
+                conection.Open();
 
-            if (user.email_str != null)
-            {
-                if (user.senha_str == senha)
+                var sql = $"SELECT * FROM tb_users WHERE email_str = '{email}'";
+
+                using var cmd = new NpgsqlCommand(sql, conection);
+
+                using NpgsqlDataReader readed = cmd.ExecuteReader();
+
+                UserModel user = new UserModel();
+
+                while (readed.Read())
                 {
-                    return true;
+                    user = new UserModel(readed.GetInt32(0), readed.GetString(1), readed.GetString(2));
+                }
+
+                if (user.email_str != null)
+                {
+                    if (user.senha_str == senha)
+                    {
+                        return "{\"status\": 200, \"user_id\": " + user.id_int.ToString() + ", \"msg\": \"Success\" }";
+                    }
+                    else
+                    {
+                        return "{\"status\": 401, \"user_id\": , \"msg\": \"Unauthorized\" }";
+                    }
+                }
+                else
+                {
+                    return "{\"status\": 404, \"user_id\": , \"msg\": \"Not Found\" }";
                 }
             }
-
-            return false;
+            catch (Exception exp)
+            {
+                return "{\"status\": 500, \"msg\": \"" + exp.Message + "\" }";
+            }
         }
 
         /*
@@ -55,12 +68,6 @@ namespace RestApiMyTasks.Controllers
         public string Get(int id)
         {
             return "value";
-        }
-
-        // POST api/<UsersController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
         }
 
         // PUT api/<UsersController>/5
