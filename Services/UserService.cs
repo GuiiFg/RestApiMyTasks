@@ -60,7 +60,60 @@ namespace RestApiMyTasks.Services
 
         public string tryCreateUser(CreateRequestModel createRequest)
         {
-            return "";
+            PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
+
+            try
+            {
+                using var conection = new NpgsqlConnection(pgConect.getConectionString());
+                conection.Open();
+
+                var sql = $"INSERT INTO tb_users(email_str,senha_str) VALUES ('{createRequest.email}', '{createRequest.senha}')";
+
+                using var cmd = new NpgsqlCommand(sql, conection);
+
+                cmd.ExecuteNonQuery();
+
+                CreateResponseModel createResponse = new CreateResponseModel(200, 1, "User Created");
+
+                return JsonSerializer.Serialize(createResponse);
+            }
+            catch (Exception exp)
+            {
+                CreateResponseModel createResponse = new CreateResponseModel(400, 0, exp.Message);
+
+                return JsonSerializer.Serialize(createResponse);
+            }
+        }
+
+        public string tryDeleteUser(int id)
+        {
+            PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
+
+            try
+            {
+                using var conection = new NpgsqlConnection(pgConect.getConectionString());
+                conection.Open();
+
+                using var cmd = new NpgsqlCommand();
+
+                cmd.Connection = conection;
+
+                cmd.CommandText = "DELETE FROM tb_tasks WHERE id_user_int = " + id.ToString() + ";";
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = "DELETE FROM tb_users WHERE id_int = " + id.ToString() + ";";
+                cmd.ExecuteNonQuery();
+
+                DeleteResponseModel deleteResponse = new DeleteResponseModel(200, 1, "User Deleted");
+
+                return JsonSerializer.Serialize(deleteResponse);
+            }
+            catch (Exception exp)
+            {
+                DeleteResponseModel deleteResponse = new DeleteResponseModel(400, 0, exp.Message);
+
+                return JsonSerializer.Serialize(deleteResponse);
+            }
         }
     }
 }
