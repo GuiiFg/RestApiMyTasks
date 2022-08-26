@@ -7,10 +7,9 @@ namespace RestApiMyTasks.Services
 {
     public class UserService
     {
+        private PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
         public LoginUserResponseModel tryLoginUser(LoginUserRequestModel loginRequest)
         {
-            PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
-
             try
             {
                 using var conection = new NpgsqlConnection(pgConect.getConectionString());
@@ -61,7 +60,6 @@ namespace RestApiMyTasks.Services
 
         public CreateUserResponseModel tryCreateUser(CreateUserRequestModel createRequest)
         {
-            PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
 
             try
             {
@@ -88,8 +86,6 @@ namespace RestApiMyTasks.Services
 
         public DeleteUserResponseModel tryDeleteUser(int id)
         {
-            PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
-
             try
             {
                 using var conection = new NpgsqlConnection(pgConect.getConectionString());
