@@ -1,4 +1,4 @@
-﻿namespace RestApiMyTasks.Models
+﻿namespace RestApiMyTasks.Models.Users
 {
     public class PostgresConectionModel
     {
