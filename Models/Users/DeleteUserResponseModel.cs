@@ -1,16 +1,16 @@
 ﻿namespace RestApiMyTasks.Models.Users
 {
-    public class LoginResponseModel
+    public class DeleteUserResponseModel
     {
-        public LoginResponseModel(int? statusCode, int? userId, string? msg)
+        public DeleteUserResponseModel(int? statusCode, int? deletedBit, string? msg)
         {
             this.statusCode = statusCode;
-            this.userId = userId;
+            this.deletedBit = deletedBit;
             this.msg = msg;
         }
 
         public int? statusCode { get; set; }
-        public int? userId { get; set; }
+        public int? deletedBit { get; set; }
         public string? msg { get; set; }
     }
 }

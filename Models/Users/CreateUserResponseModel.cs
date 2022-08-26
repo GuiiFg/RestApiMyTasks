@@ -1,8 +1,8 @@
 ﻿namespace RestApiMyTasks.Models.Users
 {
-    public class CreateResponseModel
+    public class CreateUserResponseModel
     {
-        public CreateResponseModel (int? statusCode, int? createdBit, string? msg)
+        public CreateUserResponseModel (int? statusCode, int? createdBit, string? msg)
         {
             this.statusCode = statusCode;
             this.createdBit = createdBit;

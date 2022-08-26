@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Npgsql;
 using RestApiMyTasks.Models.Users;
 using RestApiMyTasks.Services;
-using System.Runtime.Intrinsics.Arm;
-using System.Text.Json;
 
 namespace RestApiMyTasks.Controllers
 {
@@ -13,7 +10,7 @@ namespace RestApiMyTasks.Controllers
     {
         // GET api/<UsersController>/5
         [HttpPost("login")]
-        public string Login([FromBody] LoginRequestModel loginRequest)
+        public string Login([FromBody] LoginUserRequestModel loginRequest)
         {
             UserService userService = new UserService();
 
@@ -24,7 +21,7 @@ namespace RestApiMyTasks.Controllers
 
         // POST api/<ValuesController>
         [HttpPost("createUser")]
-        public string Post([FromBody] CreateRequestModel createRequest)
+        public string Post([FromBody] CreateUserRequestModel createRequest)
         {
             UserService userService = new UserService();
 

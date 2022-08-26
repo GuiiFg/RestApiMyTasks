@@ -1,4 +1,5 @@
 ﻿using Npgsql;
+using RestApiMyTasks.Models.Database;
 using RestApiMyTasks.Models.Users;
 using System.Text.Json;
 
@@ -6,7 +7,7 @@ namespace RestApiMyTasks.Services
 {
     public class UserService
     {
-        public string tryLoginUser(LoginRequestModel loginRequest)
+        public string tryLoginUser(LoginUserRequestModel loginRequest)
         {
             PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
 
@@ -32,33 +33,33 @@ namespace RestApiMyTasks.Services
                 {
                     if (user.senha_str == loginRequest.senha)
                     {
-                        LoginResponseModel loginResponse = new LoginResponseModel(200, user.id_int, "Success");
+                        LoginUserResponseModel loginResponse = new LoginUserResponseModel(200, user.id_int, "Success");
 
                         return JsonSerializer.Serialize(loginResponse);
                     }
                     else
                     {
-                        LoginResponseModel loginResponse = new LoginResponseModel(401, 0, "Unauthorized");
+                        LoginUserResponseModel loginResponse = new LoginUserResponseModel(401, 0, "Unauthorized");
 
                         return JsonSerializer.Serialize(loginResponse);
                     }
                 }
                 else
                 {
-                    LoginResponseModel loginResponse = new LoginResponseModel(404, 0, "Not Found");
+                    LoginUserResponseModel loginResponse = new LoginUserResponseModel(404, 0, "Not Found");
 
                     return JsonSerializer.Serialize(loginResponse);
                 }
             }
             catch (Exception exp)
             {
-                LoginResponseModel loginResponse = new LoginResponseModel(500, 0, exp.Message);
+                LoginUserResponseModel loginResponse = new LoginUserResponseModel(500, 0, exp.Message);
 
                 return JsonSerializer.Serialize(loginResponse);
             }
         }
 
-        public string tryCreateUser(CreateRequestModel createRequest)
+        public string tryCreateUser(CreateUserRequestModel createRequest)
         {
             PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
 
@@ -73,13 +74,13 @@ namespace RestApiMyTasks.Services
 
                 cmd.ExecuteNonQuery();
 
-                CreateResponseModel createResponse = new CreateResponseModel(200, 1, "User Created");
+                CreateUserResponseModel createResponse = new CreateUserResponseModel(200, 1, "User Created");
 
                 return JsonSerializer.Serialize(createResponse);
             }
             catch (Exception exp)
             {
-                CreateResponseModel createResponse = new CreateResponseModel(400, 0, exp.Message);
+                CreateUserResponseModel createResponse = new CreateUserResponseModel(400, 0, exp.Message);
 
                 return JsonSerializer.Serialize(createResponse);
             }
@@ -104,13 +105,13 @@ namespace RestApiMyTasks.Services
                 cmd.CommandText = "DELETE FROM tb_users WHERE id_int = " + id.ToString() + ";";
                 cmd.ExecuteNonQuery();
 
-                DeleteResponseModel deleteResponse = new DeleteResponseModel(200, 1, "User Deleted");
+                DeleteUserResponseModel deleteResponse = new DeleteUserResponseModel(200, 1, "User Deleted");
 
                 return JsonSerializer.Serialize(deleteResponse);
             }
             catch (Exception exp)
             {
-                DeleteResponseModel deleteResponse = new DeleteResponseModel(400, 0, exp.Message);
+                DeleteUserResponseModel deleteResponse = new DeleteUserResponseModel(400, 0, exp.Message);
 
                 return JsonSerializer.Serialize(deleteResponse);
             }
