@@ -10,12 +10,12 @@ namespace RestApiMyTasks.Controllers
     {
 
         // GET api/<TasksController>/5
-        [HttpGet("{id}")]
-        public GetTasksResponseModel Get(int id)
+        [HttpGet("{idCliente}")]
+        public List<TaskModel> Get(int idCliente)
         {
             TaskService taskService = new TaskService();
 
-            GetTasksResponseModel response = taskService.getTasksById(id);
+            List<TaskModel> response = taskService.getTasksById(idCliente);
 
             return response;
         }
@@ -42,6 +42,15 @@ namespace RestApiMyTasks.Controllers
 
             return response;
         }
+
+        // DELETE api/<TasksController>/5
+        [HttpDelete("delete/{id_task}")]
+        public void Delete(int id_task)
+        {
+            TaskService taskService = new TaskService();
+            taskService.deleteTask(id_task);
+        }
+        
 
         /*
         // GET: api/<TasksController>

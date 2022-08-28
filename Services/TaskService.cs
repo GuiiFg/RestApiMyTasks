@@ -9,7 +9,7 @@ namespace RestApiMyTasks.Services
     {
         private PostgresConectionModel pgConect = new PostgresConectionModel("localhost", "mytasks_user", "23#5@4", "db_mytasks");
 
-        public GetTasksResponseModel getTasksById(int id)
+        public List<TaskModel> getTasksById(int id)
         {
 
             List<TaskModel> tasksList = new List<TaskModel>();
@@ -31,15 +31,13 @@ namespace RestApiMyTasks.Services
                     tasksList.Add(newTask);
                 }
 
-                GetTasksResponseModel getResponse = new GetTasksResponseModel(200, tasksList, "Success");
 
-                return getResponse;
+                return tasksList;
             }
             catch (Exception exp)
             {
-                GetTasksResponseModel getResponse = new GetTasksResponseModel(400, tasksList, exp.Message);
 
-                return getResponse;
+                return tasksList;
             }
         }
 
@@ -69,7 +67,7 @@ namespace RestApiMyTasks.Services
             }
         }
 
-        internal UpdateTaksResponseModel updateTask(UpdateTaskRequestModel updateRequest)
+        public UpdateTaksResponseModel updateTask(UpdateTaskRequestModel updateRequest)
         {
             try
             {
@@ -91,6 +89,26 @@ namespace RestApiMyTasks.Services
                 UpdateTaksResponseModel createResponse = new UpdateTaksResponseModel(400, 0, exp.Message);
 
                 return createResponse;
+            }
+        }
+
+        public void deleteTask(int task_id)
+        {
+            try
+            {
+                using var conection = new NpgsqlConnection(pgConect.getConectionString());
+                conection.Open();
+
+                var sql = $"DELETE FROM tb_tasks WHERE id_task_int = {task_id};";
+
+                using var cmd = new NpgsqlCommand(sql, conection);
+
+                cmd.ExecuteNonQuery();
+
+
+            }
+            catch (Exception exp)
+            {
             }
         }
     }
